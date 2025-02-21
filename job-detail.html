@@ -1,0 +1,87 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Job Detail</title>
+  <!-- Integrated CSS Libraries -->
+  <link rel="stylesheet" href="bootstrap.min.css">
+  <link rel="stylesheet" href="animate.min.css">
+  <link rel="stylesheet" href="flaticon.css">
+  <link rel="stylesheet" href="fontawesome-all.min.css">
+  <link rel="stylesheet" href="magnific-popup.css">
+  <link rel="stylesheet" href="nice-select.css">
+  <link rel="stylesheet" href="owl.carousel.min.css">
+  <link rel="stylesheet" href="price_rangs.css">
+  <link rel="stylesheet" href="responsive.css">
+  <link rel="stylesheet" href="slick.css">
+  <link rel="stylesheet" href="slicknav.css">
+  <link rel="stylesheet" href="style.css">
+  <link rel="stylesheet" href="themify-icons.css">
+  <style>
+    .job-detail-container {
+      background: #fff;
+      padding: 20px;
+      border-radius: 8px;
+      box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+      max-width: 800px;
+      margin: 0 auto;
+    }
+    .apply-btn {
+      display: block;
+      margin: 30px auto;
+      padding: 15px 30px;
+      background: #007bff;
+      color: #fff;
+      border: none;
+      border-radius: 4px;
+      font-size: 1em;
+      cursor: pointer;
+    }
+  </style>
+</head>
+<body>
+  <header class="mb-4">
+    <div class="container d-flex justify-content-between align-items-center">
+      <h1 class="text-primary">Job Detail</h1>
+      <a href="profile.html" class="d-flex align-items-center text-primary">
+        <span class="mr-2 font-weight-bold">Profile</span>
+        <img src="https://via.placeholder.com/40" alt="Profile" class="rounded-circle">
+      </a>
+    </div>
+    <hr>
+  </header>
+  <main class="container">
+    <div class="job-detail-container">
+      <h2 id="jobTitle"></h2>
+      <p id="jobRequirements"></p>
+      <button class="apply-btn" id="applyBtn">Apply for the Job</button>
+    </div>
+  </main>
+  <script>
+    const jobs = [
+      { id: 1, title: "Front-end Developer", requirements: "We are seeking a skilled Front-end Developer with expertise in HTML, CSS, and JavaScript..." },
+      { id: 2, title: "Back-end Developer", requirements: "Our team is looking for a Back-end Developer experienced in server-side technologies and database management..." },
+      { id: 3, title: "Full-stack Developer", requirements: "We need a Full-stack Developer who can work on both the client and server sides of our application..." },
+      { id: 4, title: "UI/UX Designer", requirements: "We are looking for a creative UI/UX Designer to design user-friendly interfaces and experiences..." },
+      { id: 5, title: "Data Analyst", requirements: "Our organization is seeking a Data Analyst who can interpret data and turn it into actionable insights..." },
+      { id: 6, title: "Project Manager", requirements: "We are in search of a Project Manager with experience in planning, executing, and closing projects..." }
+    ];
+    function getQueryParam(param) {
+      const urlParams = new URLSearchParams(window.location.search);
+      return urlParams.get(param);
+    }
+    const jobId = parseInt(getQueryParam('id'));
+    const job = jobs.find(j => j.id === jobId);
+    if (job) {
+      document.getElementById('jobTitle').innerText = job.title;
+      document.getElementById('jobRequirements').innerText = job.requirements;
+    } else {
+      document.querySelector('.job-detail-container').innerHTML = "<p>Job not found.</p>";
+    }
+    document.getElementById('applyBtn').addEventListener('click', function() {
+      window.location.href = `job-apply.html?id=${job.id}`;
+    });
+  </script>
+</body>
+</html>

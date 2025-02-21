@@ -1,0 +1,159 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Apply for Job</title>
+  <!-- Integrated CSS Libraries -->
+  <link rel="stylesheet" href="bootstrap.min.css">
+  <link rel="stylesheet" href="animate.min.css">
+  <link rel="stylesheet" href="flaticon.css">
+  <link rel="stylesheet" href="fontawesome-all.min.css">
+  <link rel="stylesheet" href="magnific-popup.css">
+  <link rel="stylesheet" href="nice-select.css">
+  <link rel="stylesheet" href="owl.carousel.min.css">
+  <link rel="stylesheet" href="price_rangs.css">
+  <link rel="stylesheet" href="responsive.css">
+  <link rel="stylesheet" href="slick.css">
+  <link rel="stylesheet" href="slicknav.css">
+  <link rel="stylesheet" href="style.css">
+  <link rel="stylesheet" href="themify-icons.css">
+  <style>
+    #notification {
+      display: none;
+      margin-bottom: 15px;
+      padding: 10px;
+      border: 1px solid #cc0000;
+      background-color: #f8d7da;
+      color: #721c24;
+      border-radius: 4px;
+      text-align: center;
+    }
+    .apply-container {
+      background: #fff;
+      padding: 20px;
+      border-radius: 8px;
+      max-width: 600px;
+      margin: 0 auto;
+      box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+    }
+  </style>
+</head>
+<body>
+  <header class="mb-4">
+    <div class="container d-flex justify-content-between align-items-center">
+      <h1 class="text-primary">Apply for Job</h1>
+      <a href="profile.html" class="d-flex align-items-center text-primary">
+        <span class="mr-2 font-weight-bold">Profile</span>
+        <img src="https://via.placeholder.com/40" alt="Profile" class="rounded-circle">
+      </a>
+    </div>
+    <hr>
+  </header>
+  <main class="container">
+    <!-- Notification Div -->
+    <div id="notification"></div>
+    <div class="apply-container">
+      <h2 id="jobTitle">Job Title Here</h2>
+      <form id="applyForm">
+        <div class="form-group">
+          <label for="applicantName">Full Name</label>
+          <input type="text" id="applicantName" class="form-control" required>
+        </div>
+        <div class="form-group">
+          <label for="applicantEmail">Email</label>
+          <input type="email" id="applicantEmail" class="form-control" required>
+        </div>
+        <div class="form-group">
+          <label for="applicantMobile">Mobile Number</label>
+          <input type="text" id="applicantMobile" class="form-control" required>
+        </div>
+        <div class="form-group">
+          <label for="whyJob">Why do you need this job?</label>
+          <textarea id="whyJob" class="form-control" rows="4" required></textarea>
+        </div>
+        <div class="form-group form-check">
+          <input type="checkbox" id="experienceCheckbox" class="form-check-input">
+          <label for="experienceCheckbox" class="form-check-label">I have previous experience in this field</label>
+        </div>
+        <div class="experience-details" id="experienceDetails">
+          <div class="form-group">
+            <label for="companyName">In which company?</label>
+            <input type="text" id="companyName" class="form-control">
+          </div>
+          <div class="form-group">
+            <label for="role">What role?</label>
+            <input type="text" id="role" class="form-control">
+          </div>
+          <div class="form-group">
+            <label for="duration">For how long?</label>
+            <input type="text" id="duration" class="form-control">
+          </div>
+        </div>
+        <button type="submit" class="btn btn-primary">Submit Application</button>
+      </form>
+    </div>
+  </main>
+  <script>
+    const jobs = [
+      { id: 1, title: "Front-end Developer" },
+      { id: 2, title: "Back-end Developer" },
+      { id: 3, title: "Full-stack Developer" },
+      { id: 4, title: "UI/UX Designer" },
+      { id: 5, title: "Data Analyst" },
+      { id: 6, title: "Project Manager" }
+    ];
+    function getQueryParam(param) {
+      const urlParams = new URLSearchParams(window.location.search);
+      return urlParams.get(param);
+    }
+    const jobId = parseInt(getQueryParam('id'));
+    const job = jobs.find(j => j.id === jobId);
+    if (job) {
+      document.getElementById('jobTitle').innerText = job.title;
+    } else {
+      document.getElementById('jobTitle').innerText = "Job not found";
+    }
+    const experienceCheckbox = document.getElementById('experienceCheckbox');
+    const experienceDetails = document.getElementById('experienceDetails');
+    experienceCheckbox.addEventListener('change', function() {
+      experienceDetails.style.display = this.checked ? "block" : "none";
+    });
+    function showNotification(message) {
+      const notification = document.getElementById('notification');
+      notification.innerText = message;
+      notification.style.display = "block";
+      setTimeout(() => {
+        notification.style.display = "none";
+      }, 3000);
+    }
+    document.getElementById('applyForm').addEventListener('submit', function(event) {
+      event.preventDefault();
+      if (!experienceCheckbox.checked) {
+        showNotification("Sorry, we need experienced people for this job.");
+        return;
+      }
+      const application = {
+        jobId: job.id,
+        jobTitle: job.title,
+        applicantName: document.getElementById('applicantName').value,
+        applicantEmail: document.getElementById('applicantEmail').value,
+        applicantMobile: document.getElementById('applicantMobile').value,
+        whyJob: document.getElementById('whyJob').value,
+        companyName: document.getElementById('companyName').value,
+        role: document.getElementById('role').value,
+        duration: document.getElementById('duration').value,
+        appliedOn: new Date().toISOString()
+      };
+      let applications = localStorage.getItem('applications');
+      applications = applications ? JSON.parse(applications) : [];
+      applications.push(application);
+      localStorage.setItem('applications', JSON.stringify(applications));
+      showNotification("Application submitted for " + job.title + ". Redirecting to profile...");
+      setTimeout(() => {
+        window.location.href = "profile.html";
+      }, 2000);
+    });
+  </script>
+</body>
+</html>

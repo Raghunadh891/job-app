@@ -1,0 +1,245 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Profile - Job Portal</title>
+  <!-- Integrated CSS Libraries -->
+  <link rel="stylesheet" href="bootstrap.min.css">
+  <link rel="stylesheet" href="animate.min.css">
+  <link rel="stylesheet" href="flaticon.css">
+  <link rel="stylesheet" href="fontawesome-all.min.css">
+  <link rel="stylesheet" href="magnific-popup.css">
+  <link rel="stylesheet" href="nice-select.css">
+  <link rel="stylesheet" href="owl.carousel.min.css">
+  <link rel="stylesheet" href="price_rangs.css">
+  <link rel="stylesheet" href="responsive.css">
+  <link rel="stylesheet" href="slick.css">
+  <link rel="stylesheet" href="slicknav.css">
+  <link rel="stylesheet" href="style.css">
+  <link rel="stylesheet" href="themify-icons.css">
+  <style>
+    .dark-table {
+      background-color: #333;
+      color: #fff;
+      border-collapse: collapse;
+      width: 100%;
+      margin-bottom: 20px;
+    }
+    .dark-table th,
+    .dark-table td {
+      border: 1px solid #444;
+      padding: 10px;
+      text-align: left;
+    }
+    .dark-table tr:hover {
+      background-color: #444;
+      cursor: pointer;
+    }
+  </style>
+</head>
+<body>
+  <header class="mb-4">
+    <div class="container d-flex justify-content-between align-items-center">
+      <h1 class="text-primary">My Profile</h1>
+      <a href="index.html" class="text-primary font-weight-bold">Home</a>
+    </div>
+    <hr>
+  </header>
+  <main class="container">
+    <div class="row">
+      <!-- Profile Details Section -->
+      <div class="col-md-6 mb-4">
+        <div class="card">
+          <div class="card-header">
+            Profile Details
+            <button id="editProfileBtn" class="btn btn-sm btn-primary float-right">Edit Profile</button>
+          </div>
+          <div class="card-body">
+            <table id="profileTable" class="dark-table">
+              <!-- Profile details will be injected here -->
+            </table>
+          </div>
+        </div>
+      </div>
+      <!-- Job Applications Section -->
+      <div class="col-md-6 mb-4">
+        <div class="card">
+          <div class="card-header">My Job Applications</div>
+          <div class="card-body">
+            <table id="applicationsTable" class="dark-table">
+              <thead>
+                <tr>
+                  <th>Job Title</th>
+                  <th>Name</th>
+                  <th>Email</th>
+                </tr>
+              </thead>
+              <tbody>
+                <!-- Applications will be injected here -->
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+    </div>
+  </main>
+  <!-- Edit Profile Modal -->
+  <div id="editProfileModal" class="modal">
+    <div class="modal-dialog modal-dialog-centered">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title">Edit Profile</h5>
+          <button type="button" class="close" id="closeEditProfileModal">&times;</button>
+        </div>
+        <div class="modal-body">
+          <form id="editProfileForm">
+            <div class="form-group">
+              <label for="editName">Name</label>
+              <input type="text" id="editName" class="form-control" required>
+            </div>
+            <div class="form-group">
+              <label for="editEmail">Email</label>
+              <input type="email" id="editEmail" class="form-control" required>
+            </div>
+            <div class="form-group">
+              <label for="editMobile">Mobile Number</label>
+              <input type="text" id="editMobile" class="form-control" required>
+            </div>
+            <div class="form-group">
+              <label for="editDegrees">Degrees</label>
+              <input type="text" id="editDegrees" class="form-control" required>
+            </div>
+            <button type="submit" class="btn btn-primary btn-block">Save Changes</button>
+          </form>
+        </div>
+      </div>
+    </div>
+  </div>
+  <!-- Application Detail Modal -->
+  <div id="applicationModal" class="modal">
+    <div class="modal-dialog modal-dialog-centered">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title">Application Detail</h5>
+          <button type="button" class="close" id="closeAppDetailModal">&times;</button>
+        </div>
+        <div class="modal-body" id="modalBody">
+          <!-- Application detail inserted here -->
+        </div>
+      </div>
+    </div>
+  </div>
+  <script>
+    function loadProfileData() {
+      const data = localStorage.getItem('profileData');
+      if (data) {
+        return JSON.parse(data);
+      } else {
+        const defaultProfile = {
+          name: "John Doe",
+          email: "john.doe@example.com",
+          mobile: "123-456-7890",
+          degrees: "B.Sc. in Computer Science, M.Sc. in Data Science"
+        };
+        localStorage.setItem('profileData', JSON.stringify(defaultProfile));
+        return defaultProfile;
+      }
+    }
+    function saveProfileData(data) {
+      localStorage.setItem('profileData', JSON.stringify(data));
+    }
+    function loadApplications() {
+      const apps = localStorage.getItem('applications');
+      return apps ? JSON.parse(apps) : [];
+    }
+    function renderProfile() {
+      const profileData = loadProfileData();
+      const profileTable = document.getElementById('profileTable');
+      profileTable.innerHTML = `
+        <tr>
+          <th>Name</th>
+          <td>${profileData.name}</td>
+        </tr>
+        <tr>
+          <th>Email</th>
+          <td>${profileData.email}</td>
+        </tr>
+        <tr>
+          <th>Mobile</th>
+          <td>${profileData.mobile}</td>
+        </tr>
+        <tr>
+          <th>Degrees</th>
+          <td>${profileData.degrees}</td>
+        </tr>
+      `;
+    }
+    function renderApplications() {
+      const applications = loadApplications();
+      const tbody = document.getElementById('applicationsTable').querySelector('tbody');
+      tbody.innerHTML = "";
+      applications.forEach(app => {
+        const tr = document.createElement('tr');
+        tr.innerHTML = `
+          <td>${app.jobTitle}</td>
+          <td>${app.applicantName}</td>
+          <td>${app.applicantEmail}</td>
+        `;
+        tr.addEventListener('click', () => {
+          showApplicationDetail(app);
+        });
+        tbody.appendChild(tr);
+      });
+    }
+    function showApplicationDetail(application) {
+      const modalBody = document.getElementById('modalBody');
+      const status = Math.random() < 0.5 ? "Selected" : "Rejected";
+      modalBody.innerHTML = `
+        <p><strong>Job Title:</strong> ${application.jobTitle}</p>
+        <p><strong>Name:</strong> ${application.applicantName}</p>
+        <p><strong>Email:</strong> ${application.applicantEmail}</p>
+        <p><strong>Mobile:</strong> ${application.applicantMobile}</p>
+        <p><strong>Status:</strong> ${status}</p>
+      `;
+      document.getElementById('applicationModal').style.display = "block";
+    }
+    document.getElementById('closeAppDetailModal').addEventListener('click', () => {
+      document.getElementById('applicationModal').style.display = "none";
+    });
+    document.getElementById('closeEditProfileModal').addEventListener('click', () => {
+      document.getElementById('editProfileModal').style.display = "none";
+    });
+    window.addEventListener('click', function(event) {
+      const modals = document.querySelectorAll('.modal');
+      modals.forEach(modal => {
+        if (event.target === modal) {
+          modal.style.display = "none";
+        }
+      });
+    });
+    document.getElementById('editProfileBtn').addEventListener('click', () => {
+      const profileData = loadProfileData();
+      document.getElementById('editName').value = profileData.name;
+      document.getElementById('editEmail').value = profileData.email;
+      document.getElementById('editMobile').value = profileData.mobile;
+      document.getElementById('editDegrees').value = profileData.degrees;
+      document.getElementById('editProfileModal').style.display = "block";
+    });
+    document.getElementById('editProfileForm').addEventListener('submit', function(event) {
+      event.preventDefault();
+      const updatedProfile = {
+        name: document.getElementById('editName').value,
+        email: document.getElementById('editEmail').value,
+        mobile: document.getElementById('editMobile').value,
+        degrees: document.getElementById('editDegrees').value
+      };
+      saveProfileData(updatedProfile);
+      document.getElementById('editProfileModal').style.display = "none";
+      renderProfile();
+    });
+    renderProfile();
+    renderApplications();
+  </script>
+</body>
+</html>
